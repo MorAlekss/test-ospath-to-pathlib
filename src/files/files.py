@@ -1,37 +1,37 @@
-import os
+from pathlib import Path
 
 
 def get_file_path(directory, filename):
-    return os.path.join(directory, filename)
+    return str(Path(directory) / filename)
 
 
 def file_exists(filepath):
-    return os.path.exists(filepath)
+    return Path(filepath).exists()
 
 
 def get_file_size(filepath):
-    if os.path.exists(filepath):
-        return os.path.getsize(filepath)
+    if Path(filepath).exists():
+        return Path(filepath).stat().st_size
     return 0
 
 
 def get_filename(filepath):
-    return os.path.basename(filepath)
+    return Path(filepath).name
 
 
 def get_directory(filepath):
-    return os.path.dirname(filepath)
+    return str(Path(filepath).parent)
 
 
 def get_extension(filepath):
-    return os.path.splitext(filepath)[1]
+    return Path(filepath).suffix
 
 
 def is_directory(path):
-    return os.path.isdir(path)
+    return Path(path).is_dir()
 
 
 def list_files(directory):
-    if not os.path.isdir(directory):
+    if not Path(directory).is_dir():
         return []
-    return [os.path.join(directory, f) for f in os.listdir(directory)]
+    return [str(Path(directory) / f.name) for f in Path(directory).iterdir()]
