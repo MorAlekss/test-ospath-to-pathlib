@@ -1,8 +1,9 @@
 import os
+from pathlib import Path
 
 
 def make_absolute(path):
-    return os.path.abspath(path)
+    return str(Path(path).absolute())
 
 
 def get_relative(path, base):
@@ -10,16 +11,20 @@ def get_relative(path, base):
 
 
 def join_paths(*parts):
-    return os.path.join(*parts)
+    return str(Path(parts[0]).joinpath(*parts[1:]))
 
 
 def split_path(path):
-    return os.path.split(path)
+    p = Path(path)
+    parent = str(p.parent)
+    if parent == ".":
+        parent = ""
+    return (parent, p.name)
 
 
 def is_absolute(path):
-    return os.path.isabs(path)
+    return Path(path).is_absolute()
 
 
 def get_stem(filepath):
-    return os.path.splitext(os.path.basename(filepath))[0]
+    return Path(filepath).stem
