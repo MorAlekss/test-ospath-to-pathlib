@@ -1,15 +1,15 @@
-import os
+from pathlib import Path
 
 
-CONFIG_DIR = os.path.join(os.path.expanduser("~"), ".config", "myapp")
+CONFIG_DIR = str(Path.home() / ".config" / "myapp")
 
 
 def get_config_path(filename):
-    return os.path.join(CONFIG_DIR, filename)
+    return str(Path(CONFIG_DIR) / filename)
 
 
 def config_exists(filename):
-    return os.path.exists(os.path.join(CONFIG_DIR, filename))
+    return (Path(CONFIG_DIR) / filename).exists()
 
 
 def get_config_dir():
@@ -17,11 +17,10 @@ def get_config_dir():
 
 
 def ensure_config_dir():
-    if not os.path.exists(CONFIG_DIR):
-        os.makedirs(CONFIG_DIR)
+    Path(CONFIG_DIR).mkdir(parents=True, exist_ok=True)
     return CONFIG_DIR
 
 
 def get_default_config():
-    base = os.path.dirname(os.path.abspath(__file__))
-    return os.path.join(base, "defaults", "config.json")
+    base = str(Path(__file__).resolve().parent)
+    return str(Path(base) / "defaults" / "config.json")
