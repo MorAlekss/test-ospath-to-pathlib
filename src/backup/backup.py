@@ -1,15 +1,15 @@
-import os
+from pathlib import Path
 
 
-BACKUP_DIR = os.path.join(os.getcwd(), "backups")
+BACKUP_DIR = str(Path.cwd() / "backups")
 
 
 def get_backup_path(filename):
-    return os.path.join(BACKUP_DIR, filename)
+    return str(Path(BACKUP_DIR) / filename)
 
 
 def backup_exists(filename):
-    return os.path.exists(get_backup_path(filename))
+    return Path(get_backup_path(filename)).exists()
 
 
 def get_backup_dir():
@@ -17,13 +17,13 @@ def get_backup_dir():
 
 
 def list_backups():
-    if not os.path.isdir(BACKUP_DIR):
+    if not Path(BACKUP_DIR).is_dir():
         return []
-    return os.listdir(BACKUP_DIR)
+    return [p.name for p in Path(BACKUP_DIR).iterdir()]
 
 
 def get_backup_size(filename):
-    path = get_backup_path(filename)
-    if os.path.exists(path):
-        return os.path.getsize(path)
+    path = Path(get_backup_path(filename))
+    if path.exists():
+        return path.stat().st_size
     return 0
