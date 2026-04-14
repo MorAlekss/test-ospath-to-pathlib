@@ -1,15 +1,15 @@
-import os
+from pathlib import Path
 
 
-REPORTS_DIR = os.path.join(os.getcwd(), "reports")
+REPORTS_DIR = str(Path.cwd() / "reports")
 
 
 def get_report_path(name):
-    return os.path.join(REPORTS_DIR, f"{name}.pdf")
+    return str(Path(REPORTS_DIR) / f"{name}.pdf")
 
 
 def report_exists(name):
-    return os.path.exists(get_report_path(name))
+    return Path(get_report_path(name)).exists()
 
 
 def get_reports_dir():
@@ -17,17 +17,18 @@ def get_reports_dir():
 
 
 def list_reports():
-    if not os.path.isdir(REPORTS_DIR):
+    reports_dir = Path(REPORTS_DIR)
+    if not reports_dir.is_dir():
         return []
     return [
-        os.path.splitext(f)[0]
-        for f in os.listdir(REPORTS_DIR)
-        if os.path.splitext(f)[1] == ".pdf"
+        p.stem
+        for p in reports_dir.iterdir()
+        if p.suffix == ".pdf"
     ]
 
 
 def get_report_size(name):
-    path = get_report_path(name)
-    if os.path.exists(path):
-        return os.path.getsize(path)
+    path = Path(get_report_path(name))
+    if path.exists():
+        return path.stat().st_size
     return 0
